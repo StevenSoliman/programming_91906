@@ -1,6 +1,8 @@
 from tkinter import *
 from turtledemo.sorting_animate import instructions1
 
+import self
+
 
 class Converter:
     """

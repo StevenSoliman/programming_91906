@@ -1,4 +1,5 @@
 from tkinter import *
+import all_constants as c
 
 
 class Converter:
@@ -32,8 +33,8 @@ class Converter:
         self.temp_entry.grid(row=2, padx=10, pady=10)
 
         error = "Please enter a number"
-        self.temp_error = Label(self.temp_frame, text=error, fg="#9C0000")
-        self.temp_error.grid(row=3)
+        self.answer_error = Label(self.temp_frame, text=error, fg="#004C99")
+        self.answer_error.grid(row=3)
 
         # Conversion, help and history/export buttons
         self.button_frame = Frame(self.temp_frame)
@@ -41,8 +42,8 @@ class Converter:
 
         # Button list (button text | bg color | command | row | column)
         button_details_list = [
-            ["To Celsius", "#990099", None, 0, 0],
-            ["To Fahrenheit", "#009900", None, 0, 1],
+            ["To Celsius", "#990099", lambda:self.check_temp(c.ABS_ZERO_FAHRENHEIT), 0, 0],
+            ["To Fahrenheit", "#009900", lambda:self.check_temp(c.ABS_ZERO_CELSIUS), 0, 1],
             ["Help / Info", "#CC6600", None, 1, 0],
             ["History / Export", "#004C99", None, 1, 1],
         ]
@@ -59,6 +60,26 @@ class Converter:
             self.button_ref_list.append(make_button)
         # retrieve 'history / export' button and disable it at the start
         self.to_history_button = self.button_ref_list[3].config(state=DISABLED)
+
+    def check_temp(self,min_temp):
+        """
+        Check temperature is valid and either invokes calculation
+        function or shows a custom number
+        """
+        print("Min Temp", min_temp)
+
+        to_convert = self.temp_entry.get()
+        print("to convert", to_convert)
+
+        try:
+            to_convert= float(to_convert)
+            if to_convert >= min_temp:
+                print("You are OK")
+                self.answer_error.config(text="You are OK")
+            else:
+                self.answer_error.config(text="Too Low")
+        except ValueError:
+            self.answer_error.config(text="Please enter a number")
 
 
 # Main routine

@@ -14,6 +14,8 @@ class Converter:
 
         self.all_calculations_list = []
 
+        self.all_calculations_list = []
+
         self.temp_frame = Frame(padx=10, pady=10)
         self.temp_frame.grid()
 
@@ -62,8 +64,10 @@ class Converter:
                                  width=12, command=item[2])
             make_button.grid(row=item[3], column=item[4], padx=5, pady=5)
             self.button_ref_list.append(make_button)
+
         # retrieve 'history / export' button and disable it at the start
-        self.button_ref_list[3].config(state=DISABLED)
+        self.to_history_button = self.button_ref_list[3]
+        self.to_history_button.config(state=DISABLED)
 
     def check_temp(self,min_temp):
         """
@@ -100,11 +104,14 @@ class Converter:
 
         if min_temp == c.ABS_ZERO_CELSIUS:
             answer = cr.to_fahrenheit(to_convert)
-            self.answer_error.config(text=f"Converting {to_convert}°C to °F")
+            answer_statement = f"{to_convert}°C is {answer} °F"
         else:
             answer = cr.to_celsius(to_convert)
-            self.answer_error.config(text=f"Converting {to_convert} °F to °C")
+            answer_statement = f"{to_convert}°F is {answer} °C"
 
+        self.to_history_button.config(state=NORMAL)
+
+        self.answer_error.config(text=answer_statement)
         self.all_calculations_list.append(answer)
         print(self.all_calculations_list)
 

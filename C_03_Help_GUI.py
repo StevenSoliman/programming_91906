@@ -1,4 +1,5 @@
 from tkinter import *
+from functools import partial
 
 class Converter:
     """
@@ -23,14 +24,20 @@ class Converter:
 
 
     def to_help(self):
-        DisplayHelp()
+        """
+        Open help dialogue box and display help button
+        (so that users can't create multiple help box).
+        """
+        DisplayHelp(self)
 
 class DisplayHelp:
 
     # setup dialogeu box and background colour
-    def __init__(self):
+    def __init__(self, partner):
         background = "#ffe6cc"
         self.help_box = Toplevel()
+
+        partner.to_help_button.config(state=DISABLED)
 
         self.help_frame = Frame(self.help_box, width=300,
                                 height=200)
@@ -40,20 +47,31 @@ class DisplayHelp:
                                         font=("Arial", "14", "bold"))
         self.help_heading_label.grid(row=0)
 
+        help_text = "To use this program simply enter a temperature  " \
+                     "you wish to convert and then press the button " \
+                     "to either convert from Celsius (centigrade) or Fahrenheit. \n\n" \
+                     "Note that -273 degree C" \
+                     "is the absolute zero and -459.67 degree F is the (coldest temperature as possible)." \
+                    "If you try to convert temperatures below this limit you will receive an error. \n\n" \
+                    "To see your calculation history and export it to a text file, press the 'History / Export' button."
+
         self.help_heading_label = Label(self.help_frame, text="help text goes here", wraplength=350,
                                         justify="left")
         self.help_heading_label.grid(row=1, padx=10)
 
         self.dismiss_button = Button(self.help_frame,
                                     font=  ("Arial", "12", "bold"),
-                                    text="Dismiss", bg="#CC6600", fg="#FFFFFF", command=self.close_help)
+                                    text="Dismiss", bg="#CC6600", fg="#FFFFFF", command=partial(self.close_help, partner))
         self.dismiss_button.grid(row=2, padx=10, pady=10)
 
         recolour_list = [self.help_frame, self.help_heading_label, self.dismiss_button]
         for item in recolour_list:
             item.config(bg=background)
 
-    def close_help(self):
+    def close_help(self, partner):
+        self.help_box.destroy()
+
+        partner.to_help_button.config(state=NORMAL)
         self.help_box.destroy()
 
 

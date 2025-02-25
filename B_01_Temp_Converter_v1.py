@@ -3,6 +3,7 @@ from functools import partial
 import all_constants as c
 import conversion_rounding as cr
 
+
 class Converter:
     """
     Temperature conversion tool (°C to °F or °F to °C)
@@ -12,8 +13,6 @@ class Converter:
         """
         Temperature converter GUI
         """
-
-        self.all_calculations_list = []
 
         self.all_calculations_list = []
 
@@ -51,8 +50,8 @@ class Converter:
         button_details_list = [
             ["To Celsius", "#990099", lambda: self.check_temp(c.ABS_ZERO_FAHRENHEIT), 0, 0],
             ["To Fahrenheit", "#009900", lambda: self.check_temp(c.ABS_ZERO_CELSIUS), 0, 1],
-            ["Help / Info", "#CC6600", self.to_help, None, 1, 0],
-            ["History / Export", "#004C99", None, 1, 1],
+            ["Help / Info", "#CC6600", self.to_help, 1, 0],  # Fixed row and column
+            ["History / Export", "#004C99", None, 1, 1],  # Fixed row and column
         ]
 
         # List to hold buttons once they have been made
@@ -68,13 +67,11 @@ class Converter:
 
         self.to_help_button = self.button_ref_list[2]
 
-        # retrieve 'history / export' button and disable it at the start
+        # Retrieve 'history / export' button and disable it at the start
         self.to_history_button = self.button_ref_list[3]
         self.to_history_button.config(state=DISABLED)
 
-
-
-    def check_temp(self,min_temp):
+    def check_temp(self, min_temp):
         """
         Check temperature is valid and either invokes calculation
         function or shows a custom number
@@ -87,26 +84,26 @@ class Converter:
         error = f"Enter a number more than / equal to {min_temp}"
         has_errors = "no"
 
-
         try:
-            to_convert= float(to_convert)
+            to_convert = float(to_convert)
             if to_convert >= min_temp:
                 error = ""
                 self.convert(min_temp, to_convert)
             else:
-                error="Too Low"
+                error = "Too Low"
         except ValueError:
             error = "Please enter a number"
 
-        # display the error if necessary
+        # Display the error if necessary
         if error != "":
             self.answer_error.config(text=error, fg="#9C0000")
             self.temp_entry.config(bg="#F4CCCC")
-            self.temp_entry.delete(0,END)
-
+            self.temp_entry.delete(0, END)
 
     def convert(self, min_temp, to_convert):
-
+        """
+        Convert temperature and update answer label
+        """
         if min_temp == c.ABS_ZERO_CELSIUS:
             answer = cr.to_fahrenheit(to_convert)
             answer_statement = f"{to_convert}°C is {answer} °F"
@@ -114,11 +111,12 @@ class Converter:
             answer = cr.to_celsius(to_convert)
             answer_statement = f"{to_convert}°F is {answer} °C"
 
+        # Enable history export button
         self.to_history_button.config(state=NORMAL)
 
+        # Update answer label
         self.answer_error.config(text=answer_statement)
         self.all_calculations_list.append(answer_statement)
-
 
     def to_help(self):
         """
@@ -127,18 +125,22 @@ class Converter:
         """
         DisplayHelp(self)
 
-class DisplayHelp:
 
-    # setup dialogeu box and background colour
+class DisplayHelp:
+    """
+    Display help information in a new window
+    """
+
     def __init__(self, partner):
         background = "#ffe6cc"
         self.help_box = Toplevel()
 
+        # Disable help button
         partner.to_help_button.config(state=DISABLED)
 
-        #If users press cross at top, closes help and release help button
+        # If users press cross at top, closes help and release help button
         self.help_box.protocol('WM_DELETE_WINDOW',
-                               partial(self.close_help,partner))
+                               partial(self.close_help, partner))
 
         self.help_frame = Frame(self.help_box, width=300,
                                 height=200)
@@ -149,34 +151,34 @@ class DisplayHelp:
         self.help_heading_label.grid(row=0)
 
         help_text = "To use this program simply enter a temperature  " \
-                     "you wish to convert and then press the button " \
-                     "to either convert from Celsius (centigrade) or Fahrenheit. \n\n" \
-                     "Note that -273 degree C" \
-                     "is the absolute zero and -459.67 degree F is the (coldest temperature as possible)." \
+                    "you wish to convert and then press the button " \
+                    "to either convert from Celsius (centigrade) or Fahrenheit. \n\n" \
+                    "Note that -273 degree C " \
+                    "is the absolute zero and -459.67 degree F is the (coldest temperature as possible). " \
                     "If you try to convert temperatures below this limit you will receive an error. \n\n" \
                     "To see your calculation history and export it to a text file, press the 'History / Export' button."
 
         self.help_text_label = Label(self.help_frame, text=help_text, wraplength=350,
-                                        justify="left")
+                                     justify="left")
         self.help_text_label.grid(row=1, padx=10)
 
         self.dismiss_button = Button(self.help_frame,
-                                    font=  ("Arial", "12", "bold"),
+                                    font=("Arial", "12", "bold"),
                                     text="Dismiss", bg="#CC6600",
-                                     fg="#FFFFFF",
-                                     command=partial(self.close_help, partner))
+                                    fg="#FFFFFF",
+                                    command=partial(self.close_help, partner))
         self.dismiss_button.grid(row=2, padx=10, pady=10)
 
+        # Set background colour for all widgets
         recolour_list = [self.help_frame, self.help_heading_label, self.help_text_label]
         for item in recolour_list:
             item.config(bg=background)
 
     def close_help(self, partner):
-        self.help_box.destroy()
         """
-        Close help dialogue box and reenable help button.
+        Close help dialogue box and re-enable help button.
         """
-        #put help button to normal
+        # Put help button back to normal
         partner.to_help_button.config(state=NORMAL)
         self.help_box.destroy()
 

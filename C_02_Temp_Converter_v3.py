@@ -113,7 +113,7 @@ class Converter:
 
         self.answer_error.config(text=answer_statement)
         self.all_calculations_list.append(answer)
-        print(self.all_calculations_list)
+
 
 # Main routine
 if __name__ == "__main__":

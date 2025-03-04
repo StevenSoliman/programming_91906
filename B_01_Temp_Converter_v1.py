@@ -51,7 +51,7 @@ class Converter:
             ["To Celsius", "#990099", lambda: self.check_temp(c.ABS_ZERO_FAHRENHEIT), 0, 0],
             ["To Fahrenheit", "#009900", lambda: self.check_temp(c.ABS_ZERO_CELSIUS), 0, 1],
             ["Help / Info", "#CC6600", self.to_help, 1, 0],  # Fixed row and column
-            ["History / Export", "#004C99", self.to_history_button, 1, 1],  # Fixed row and column
+            ["History / Export", "#004C99", self.to_history, 1, 1],  # Fixed row and column
         ]
 
         # List to hold buttons once they have been made
@@ -124,6 +124,13 @@ class Converter:
         (so that users can't create multiple help box).
         """
         DisplayHelp(self)
+
+    def to_history(self):
+         """
+        Placeholder for history export function.
+        """
+        HistoryExport(self)
+
 
 
 class DisplayHelp:

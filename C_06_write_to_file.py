@@ -9,7 +9,7 @@ today = date.today()
 
 # Get day, month and year as individual string
 day = today.strftime("%d")
-month = today.strftime("%B")
+month = today.strftime("%m")
 year = today.strftime("%Y")
 
 file_name = f"temperature_{year}_{month}_{day}"

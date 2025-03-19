@@ -1,7 +1,6 @@
 from tkinter import *
 import all_constants as c
 
-
 class Converter:
     """
     Temperature conversion tool (°C to °F or °F to °C)
@@ -71,8 +70,6 @@ class Converter:
 
         self.answer_error.config(fg="#004C99")
         self.temp_entry.config(bg="#FFFFFF")
-
-
         try:
             to_convert= float(to_convert)
             if to_convert >= min_temp:

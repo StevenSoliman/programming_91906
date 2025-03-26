@@ -68,8 +68,7 @@ class Converter:
         self.to_help_button = self.button_ref_list[2]
 
         # Retrieve 'history / export' button and disable it at the start
-        self.to_history_button = self.button_ref_list[3]
-        self.to_history_button.config(state=DISABLED)
+        self.to_history_button = self.button_ref_list[3].config(state=DISABLED)
 
     def check_temp(self, min_temp):
         """
